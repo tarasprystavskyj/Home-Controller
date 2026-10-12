@@ -1,6 +1,23 @@
 package com.technlov.homecontroller.ui.device
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material.icons.rounded.BatteryChargingFull
+import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.Kitchen
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.semantics.Role
+import com.technlov.homecontroller.ui.components.GroupCard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -151,6 +168,15 @@ data class DemoSession(val at: Long, val hour0: Long, val partialKwh: Double) {
     companion object {
         private const val HOUR = 3_600_000L
 
+        /** For rememberSaveable: three numbers, or nothing before the first reading. */
+        val Saver: Saver<DemoSession?, Any> = Saver(
+            save = { s -> s?.let { arrayListOf<Any>(it.at, it.hour0, it.partialKwh) } ?: arrayListOf<Any>() },
+            restore = { v ->
+                val l = v as List<*>
+                if (l.size == 3) DemoSession(l[0] as Long, l[1] as Long, l[2] as Double) else null
+            },
+        )
+
         fun start(h: PowerHistoryUi, now: Long, runKwh: Double): DemoSession {
             val hour0 = now - Math.floorMod(now, HOUR)
             val held = h.hourly.firstOrNull { it.first == hour0 }?.second ?: 0.0
@@ -158,6 +184,9 @@ data class DemoSession(val at: Long, val hour0: Long, val partialKwh: Double) {
         }
     }
 }
+
+/** Rounding noise around zero (e.g. -1e-17) would print as a red "-0,000". */
+internal fun clean(v: Double): Double = if (kotlin.math.abs(v) < 0.0005) 0.0 else v
 
 /** Next displayed value: follows [target] up; ignores a step back of under half a kopeck; corrects a bigger one. */
 internal fun settle(shown: Double, target: Double): Double =
@@ -184,7 +213,7 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
     val month0 = Instant.ofEpochMilli(now0).atZone(tz).toLocalDate().withDayOfMonth(1).atStartOfDay(tz).toInstant().toEpochMilli()
     val (todayKwh, todayUah) = costSince(history, day0, base, zones, tz)
     val (monthKwh, monthUah) = costSince(history, month0, base, zones, tz)
-    val (allKwh, allUah) = costSince(history, Long.MIN_VALUE, base, zones, tz)
+    val allKwh = history.hourly.sumOf { it.second }
     val powerW = livePowerW ?: history.nowW ?: 0.0
 
     var frameMs by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -203,9 +232,11 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
     shown = settle(shown, todayUah + runKwh * priceNow)
     val shownKwh = todayKwh + runKwh
 
-    // Since the demo started, kept in memory. Stored as a point in time (hour + energy already in that hour), so it
-    // can be priced under any tariff: switching the meter type does not reset it, "Start from zero" does.
-    var session by remember { mutableStateOf<DemoSession?>(null) }
+    // Since the demo started. Stored as a point in time (hour + energy already in that hour), so it can be priced under
+    // any tariff. rememberSaveable: the list drops this card's state when it scrolls out of view, which reset a plain
+    // remember; saved state survives scrolling and rotation and starts afresh only when the device page is opened
+    // anew or "Start from zero" is tapped.
+    var session by rememberSaveable(stateSaver = DemoSession.Saver) { mutableStateOf<DemoSession?>(null) }
     if (session == null && history.hourly.isNotEmpty()) session = DemoSession.start(history, frameMs, runKwh)
     val ses = session
     val sesKwh = ses?.kwh(history, runKwh) ?: 0.0
@@ -213,9 +244,16 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
     var shownSes by remember(ses, base, zones) { mutableStateOf(0.0) }
     shownSes = settle(shownSes, sesUah)
     val ratePerSec = powerW / 1000 / 3600 * priceNow
-    // Saving against a single-rate meter (every hour at the day price), for the whole stored history and the demo.
-    val savingAll = (allKwh + runKwh) * base - (allUah + runKwh * priceNow)
-    val savingSes = sesKwh * base - sesUah
+    // What a two-zone and a three-zone meter would save against a single-rate one (every hour at the day price), for
+    // the whole stored history and for the demo. Shown whatever meter is chosen above.
+    val singleAll = (allKwh + runKwh) * base
+    val singleSes = sesKwh * base
+    val savings = listOf(2, 3).map { z ->
+        val priceZ = { h: Long -> base * Tariffs.zone(z, h, tz).coef }
+        val zonedAll = history.hourly.sumOf { (h, e) -> e * priceZ(h) } + runKwh * priceZ(frameMs)
+        val zonedSes = ses?.uah(history, runKwh, priceZ(frameMs), priceZ) ?: 0.0
+        Triple(z, clean(singleAll - zonedAll), clean(singleSes - zonedSes))
+    }
     val firstHour = history.hourly.firstOrNull()?.first
 
     val scheme = MaterialTheme.colorScheme
@@ -251,8 +289,9 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
                         Text(stringResource(R.string.cost_now), style = MaterialTheme.typography.titleMedium)
                         Text(stringResource(R.string.cost_per_hour), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
                     }
+                    // To a tenth of a kopeck, so it visibly moves with the power the plug reports.
                     Text(
-                        nf(2).format(powerW / 1000 * priceNow) + " ₴",
+                        nf(3).format(powerW / 1000 * priceNow) + " ₴",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = scheme.primary,
@@ -263,25 +302,28 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
                 Text(stringResource(R.string.cost_today), style = MaterialTheme.typography.labelMedium, color = scheme.onSurfaceVariant)
                 Odometer(shown, ratePerSec)
                 LabelValue(stringResource(R.string.cost_month), stringResource(R.string.cost_kwh_uah, nf(3).format(monthKwh + runKwh), nf(2).format(monthUah + runKwh * priceNow)))
-                if (zones > 1) {
-                    HorizontalDivider()
-                    Text(stringResource(R.string.cost_saving_title), style = MaterialTheme.typography.titleSmall)
-                    val dateFmt = remember { java.time.format.DateTimeFormatter.ofPattern("d MMM, HH:mm") }
-                    val good = Color(0xFF15803D)
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(
-                            stringResource(R.string.cost_saving_all, firstHour?.let { dateFmt.format(Instant.ofEpochMilli(it).atZone(tz)) } ?: "—"),
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f).padding(end = 12.dp),
-                        )
-                        Text(nf(2).format(savingAll) + " ₴", fontWeight = FontWeight.Bold, color = if (savingAll >= 0) good else scheme.error)
-                    }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(stringResource(R.string.cost_saving_session), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f).padding(end = 12.dp))
-                        Text(nf(3).format(savingSes) + " ₴", fontWeight = FontWeight.Bold, color = if (savingSes >= 0) good else scheme.error)
-                    }
-                    Text(stringResource(R.string.cost_saving_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
+                HorizontalDivider()
+                Text(stringResource(R.string.cost_saving_title), style = MaterialTheme.typography.titleSmall)
+                val dateFmt = remember { java.time.format.DateTimeFormatter.ofPattern("d MMM, HH:mm") }
+                Text(
+                    stringResource(R.string.cost_saving_all, firstHour?.let { dateFmt.format(Instant.ofEpochMilli(it).atZone(tz)) } ?: "—"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = scheme.onSurfaceVariant,
+                )
+                val good = Color(0xFF15803D)
+                Row(Modifier.fillMaxWidth()) {
+                    Spacer(Modifier.weight(1f))
+                    Text(stringResource(R.string.cost_col_all), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant, modifier = Modifier.width(96.dp))
+                    Text(stringResource(R.string.cost_col_session), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant, modifier = Modifier.width(96.dp))
                 }
+                savings.forEach { (z, all, s) ->
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(if (z == 2) R.string.meter_short_2 else R.string.meter_short_3), modifier = Modifier.weight(1f))
+                        Text(nf(2).format(all) + " ₴", fontWeight = FontWeight.Bold, color = if (all >= 0) good else scheme.error, modifier = Modifier.width(96.dp))
+                        Text(nf(3).format(s) + " ₴", fontWeight = FontWeight.Bold, color = if (s >= 0) good else scheme.error, modifier = Modifier.width(96.dp))
+                    }
+                }
+                Text(stringResource(R.string.cost_saving_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
                 HorizontalDivider()
                 TariffEditor(base, zones) { b, z ->
                     base = b; zones = z
@@ -432,13 +474,8 @@ private fun NightChargingCard(prefs: CostPrefs, base: Double, powerW: Double) {
     var cycles by remember { mutableStateOf(prefs.str("c_cycles", "3000")) }
     val defaultName = stringResource(R.string.calc_default_name)
 
-    Card(
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = scheme.surfaceContainerLow),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(stringResource(R.string.calc_devices), style = MaterialTheme.typography.titleMedium)
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Foldable(Icons.Rounded.Kitchen, stringResource(R.string.calc_devices)) {
             NumField(name, { name = it }, stringResource(R.string.calc_name), Modifier.fillMaxWidth(), number = false)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 NumField(hours, { hours = it }, stringResource(R.string.calc_hours), Modifier.weight(1f))
@@ -467,9 +504,8 @@ private fun NightChargingCard(prefs: CostPrefs, base: Double, powerW: Double) {
                     }
                 }
             }
-
-            HorizontalDivider()
-            Text(stringResource(R.string.calc_title), style = MaterialTheme.typography.titleMedium)
+        }
+        Foldable(Icons.Rounded.BatteryChargingFull, stringResource(R.string.calc_title)) {
             Text(stringResource(R.string.calc_client_meter), style = MaterialTheme.typography.labelMedium)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(R.string.meter_short_1, R.string.meter_short_2, R.string.meter_short_3).forEachIndexed { i, res ->
@@ -536,6 +572,37 @@ private fun NightChargingCard(prefs: CostPrefs, base: Double, powerW: Double) {
                 if (clientZones == 1) Text(stringResource(R.string.calc_single_zone), color = bad, style = MaterialTheme.typography.bodySmall)
             }
             Text(stringResource(R.string.calc_note), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
+        }
+    }
+}
+
+/** A card that opens and closes on its header, like "Diagnostics"; closed at first, remembered while scrolling. */
+@Composable
+private fun Foldable(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, content: @Composable () -> Unit) {
+    var open by rememberSaveable(title) { mutableStateOf(false) }
+    val rotation by animateFloatAsState(if (open) 180f else 0f, label = "chevron")
+    GroupCard(contentPadding = PaddingValues(0.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(role = Role.Button) { open = !open }
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+            Spacer(Modifier.width(12.dp))
+            Text(title, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+            Icon(
+                Icons.Rounded.ExpandMore,
+                contentDescription = stringResource(if (open) R.string.action_collapse else R.string.action_expand),
+                modifier = Modifier.rotate(rotation),
+            )
+        }
+        AnimatedVisibility(visible = open, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
+            Column(
+                Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) { content() }
         }
     }
 }
