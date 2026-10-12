@@ -159,6 +159,10 @@ data class DemoSession(val at: Long, val hour0: Long, val partialKwh: Double) {
     }
 }
 
+/** Next displayed value: follows [target] up; ignores a step back of under half a kopeck; corrects a bigger one. */
+internal fun settle(shown: Double, target: Double): Double =
+    if (target >= shown || shown - target > 0.005) target else shown
+
 private fun nf(digits: Int) = NumberFormat.getNumberInstance().apply {
     minimumFractionDigits = digits
     maximumFractionDigits = digits
@@ -191,11 +195,12 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
     // Run on from the last STORED sample (samples are kept per minute, so the stored energy ends a minute or two
     // before "now"); running from [now0] instead lost that stretch at every reload and stalled the counter.
     val anchor = history.lastSampleAt ?: now0
-    val dt = ((frameMs - anchor).coerceIn(0L, 300_000L)) / 3_600_000.0
+    val dt = ((frameMs - anchor).coerceIn(0L, 150_000L)) / 3_600_000.0
     val runKwh = powerW / 1000 * dt
-    // Never runs backwards within a day and a tariff; a new day or a new price starts it afresh.
+    // Holds through tiny step-backs (a reload replacing the estimate with stored energy) so the drums don't jitter,
+    // but a real gap is corrected: running on at a power that has since dropped must not stay over-counted.
     var shown by remember(base, zones, day0) { mutableStateOf(0.0) }
-    shown = maxOf(shown, todayUah + runKwh * priceNow)
+    shown = settle(shown, todayUah + runKwh * priceNow)
     val shownKwh = todayKwh + runKwh
 
     // Since the demo started, kept in memory. Stored as a point in time (hour + energy already in that hour), so it
@@ -206,7 +211,7 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
     val sesKwh = ses?.kwh(history, runKwh) ?: 0.0
     val sesUah = ses?.uah(history, runKwh, priceNow) { h -> base * Tariffs.zone(zones, h, tz).coef } ?: 0.0
     var shownSes by remember(ses, base, zones) { mutableStateOf(0.0) }
-    shownSes = maxOf(shownSes, sesUah)
+    shownSes = settle(shownSes, sesUah)
     val ratePerSec = powerW / 1000 / 3600 * priceNow
     // Saving against a single-rate meter (every hour at the day price), for the whole stored history and the demo.
     val savingAll = (allKwh + runKwh) * base - (allUah + runKwh * priceNow)
