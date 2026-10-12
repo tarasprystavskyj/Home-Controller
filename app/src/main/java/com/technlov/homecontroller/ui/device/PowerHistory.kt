@@ -196,12 +196,15 @@ private fun TimeAxis(history: PowerHistoryUi) {
     }
 }
 
+// Unit symbols follow the phone's language (SI symbols are spelled differently in Ukrainian).
+private val uk get() = java.util.Locale.getDefault().language == "uk"
+
 private fun watts(v: Double): String {
     val nf = NumberFormat.getNumberInstance().apply { maximumFractionDigits = 1 }
-    return if (v >= 1_000) nf.format(v / 1_000) + " kW" else nf.format(v) + " W"
+    return if (v >= 1_000) nf.format(v / 1_000) + (if (uk) " кВт" else " kW") else nf.format(v) + (if (uk) " Вт" else " W")
 }
 
 private fun kwh(v: Double): String {
     val nf = NumberFormat.getNumberInstance().apply { maximumFractionDigits = if (v < 10) 2 else 1 }
-    return nf.format(v) + " kWh"
+    return nf.format(v) + (if (uk) " кВт·год" else " kWh")
 }

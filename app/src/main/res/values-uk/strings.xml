@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Navigation -->
+    <string name="nav_home">Дім</string>
+    <string name="nav_automations">Автоматизації</string>
+    <string name="nav_settings">Налаштування</string>
+
+    <!-- Common actions -->
+    <string name="action_add">Додати</string>
+    <string name="action_add_device">Додати пристрій</string>
+    <string name="action_allow">Дозволити</string>
+    <string name="action_back">Назад</string>
+    <string name="action_cancel">Скасувати</string>
+    <string name="action_change">Змінити</string>
+    <string name="action_close">Закрити</string>
+    <string name="action_collapse">Згорнути</string>
+    <string name="action_create">Створити</string>
+    <string name="action_decrease">Менше</string>
+    <string name="action_delete">Видалити</string>
+    <string name="action_expand">Розгорнути</string>
+    <string name="action_find_devices">Знайти пристрої</string>
+    <string name="action_increase">Більше</string>
+    <string name="action_look_up">Перевірити</string>
+    <string name="action_more">Інші дії</string>
+    <string name="action_move_down">Нижче</string>
+    <string name="action_move_up">Вище</string>
+    <string name="action_ok">Гаразд</string>
+    <string name="action_open_settings">Відкрити налаштування</string>
+    <string name="action_open_wifi_settings">Відкрити налаштування Wi-Fi</string>
+    <string name="action_power">Живлення</string>
+    <string name="action_remove">Прибрати</string>
+    <string name="action_retry">Повторити</string>
+    <string name="action_save">Зберегти</string>
+    <string name="action_scan">Сканувати мою мережу</string>
+    <string name="action_scan_again">Сканувати ще раз</string>
+
+    <!-- Values and status -->
+    <string name="value_on">Увімк.</string>
+    <string name="value_off">Вимк.</string>
+    <string name="value_unknown">—</string>
+    <string name="status_online">У мережі</string>
+    <string name="status_offline">Не в мережі</string>
+    <string name="status_connecting">Зʼєднання…</string>
+    <string name="status_sending">Надсилаю…</string>
+    <string name="updated_just_now">Оновлено щойно</string>
+    <plurals name="updated_seconds">
+        <item quantity="one">Оновлено %d с тому</item>
+        <item quantity="few">Оновлено %d с тому</item>
+        <item quantity="many">Оновлено %d с тому</item>
+        <item quantity="other">Оновлено %d с тому</item>
+    </plurals>
+    <plurals name="updated_minutes">
+        <item quantity="one">Оновлено %d хв тому</item>
+        <item quantity="few">Оновлено %d хв тому</item>
+        <item quantity="many">Оновлено %d хв тому</item>
+        <item quantity="other">Оновлено %d хв тому</item>
+    </plurals>
+
+    <!-- Problems with devices -->
+    <string name="issue_timeout">Пристрій не відповів</string>
+    <string name="issue_unknown_device">Цього пристрою вже немає у вашому домі</string>
+    <string name="issue_no_connector">Немає плагіна для «%1$s»</string>
+    <string name="issue_generic">Щось пішло не так</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Доброго ранку</string>
+    <string name="greeting_afternoon">Доброго дня</string>
+    <string name="greeting_evening">Доброго вечора</string>
+    <string name="greeting_night">Ласкаво просимо додому</string>
+    <string name="summary_on">Увімкнено</string>
+    <string name="summary_inside">Усередині</string>
+    <string name="summary_online">У мережі</string>
+    <string name="summary_fraction">%1$d/%2$d</string>
+    <string name="room_none">Без кімнати</string>
+    <plurals name="device_count">
+        <item quantity="one">%d пристрій</item>
+        <item quantity="few">%d пристрої</item>
+        <item quantity="many">%d пристроїв</item>
+        <item quantity="other">%d пристрою</item>
+    </plurals>
+    <string name="tile_mode_to_target">%1$s до %2$s</string>
+    <string name="tile_set_to">Встановлено %1$s</string>
+    <plurals name="home_show_hidden">
+        <item quantity="one">Показати %d прихований пристрій</item>
+        <item quantity="few">Показати %d приховані пристрої</item>
+        <item quantity="many">Показати %d прихованих пристроїв</item>
+        <item quantity="other">Показати %d прихованого пристрою</item>
+    </plurals>
+    <string name="home_hide_hidden">Сховати приховані пристрої</string>
+    <string name="empty_home_title">Ваш дім у вашому Wi-Fi</string>
+    <string name="empty_home_text">Знайдіть кондиціонери, розетки та інші розумні пристрої у своїй мережі й керуйте ними прямо тут.</string>
+    <string name="empty_home_privacy">Без хмари й акаунта. Усе лишається вдома.</string>
+    <string name="message_power_failed">Не вдалося перемкнути %1$s: %2$s</string>
+
+    <!-- Device -->
+    <string name="dial_description">Цільова температура</string>
+    <string name="dial_room">У кімнаті %1$s</string>
+    <string name="device_waiting">Зʼєднуюся з пристроєм…</string>
+    <string name="offline_title">Пристрій недоступний</string>
+    <string name="offline_text">Перевірте, що він увімкнений і підключений до того самого Wi-Fi.</string>
+    <string name="device_features">Функції</string>
+    <string name="device_readings">Показники</string>
+    <string name="device_diagnostics">Діагностика</string>
+    <string name="device_info_plugin">Плагін</string>
+    <string name="device_info_address">Адреса</string>
+    <string name="device_info_model">Модель</string>
+    <string name="device_info_firmware">Прошивка</string>
+    <string name="device_info_id">ID пристрою</string>
+    <string name="device_menu_rename">Перейменувати</string>
+    <string name="device_menu_room">Кімната</string>
+    <string name="device_menu_hide">Сховати з головного екрана</string>
+    <string name="device_menu_show">Показати на головному екрані</string>
+    <string name="device_menu_remove">Прибрати</string>
+    <string name="device_rename_title">Перейменувати пристрій</string>
+    <string name="device_name_label">Назва</string>
+    <string name="device_remove_title">Прибрати %1$s?</string>
+    <string name="device_remove_text">Він зникне з вашого дому, і автоматизації не зможуть ним керувати. Додати знову можна через «Знайти пристрої».</string>
+    <string name="message_change_failed">Не вдалося змінити %1$s: %2$s</string>
+    <string name="message_device_hidden">Сховано з головного екрана</string>
+    <string name="message_device_shown">Показано на головному екрані</string>
+
+    <!-- Rooms -->
+    <string name="room_add">Додати кімнату</string>
+    <string name="room_new_title">Нова кімната</string>
+    <string name="room_new_chip">Нова кімната</string>
+    <string name="room_rename_title">Перейменувати кімнату</string>
+    <string name="room_name_label">Назва кімнати</string>
+    <string name="room_delete_title">Видалити %1$s?</string>
+    <string name="room_delete_text">Її пристрої лишаться у вашому домі, без кімнати.</string>
+    <string name="rooms_empty">Кімнат ще немає. Кімнати групують пристрої на головному екрані.</string>
+    <plurals name="rooms_count">
+        <item quantity="one">%d кімната</item>
+        <item quantity="few">%d кімнати</item>
+        <item quantity="many">%d кімнат</item>
+        <item quantity="other">%d кімнати</item>
+    </plurals>
+    <string-array name="room_suggestions">
+        <item>Вітальня</item>
+        <item>Спальня</item>
+        <item>Кухня</item>
+        <item>Кабінет</item>
+        <item>Гостьова</item>
+    </string-array>
+
+    <!-- Discovery -->
+    <string name="discovery_title">Знайти пристрої</string>
+    <string name="discovery_idle_title">Скануйте свою мережу</string>
+    <string name="discovery_idle_text">Пристрої відповідають у вашому Wi-Fi. Ніщо не виходить за межі мережі.</string>
+    <string name="discovery_scanning_title">Шукаю пристрої…</string>
+    <string name="discovery_scanning_text">Сканую %1$s</string>
+    <string name="discovery_network_text">Проскановано %1$s</string>
+    <string name="discovery_scanning_button">Сканую…</string>
+    <string name="discovery_no_wifi_title">Немає Wi-Fi</string>
+    <string name="discovery_no_wifi_text">Підключіться до домашнього Wi-Fi і скануйте знову.</string>
+    <string name="discovery_found_none">Пристроїв поки не знайдено</string>
+    <plurals name="discovery_found">
+        <item quantity="one">Знайдено %d пристрій</item>
+        <item quantity="few">Знайдено %d пристрої</item>
+        <item quantity="many">Знайдено %d пристроїв</item>
+        <item quantity="other">Знайдено %d пристрою</item>
+    </plurals>
+    <plurals name="discovery_found_short">
+        <item quantity="one">знайдено %d</item>
+        <item quantity="few">знайдено %d</item>
+        <item quantity="many">знайдено %d</item>
+        <item quantity="other">знайдено %d</item>
+    </plurals>
+    <string name="discovery_connector_failed">Не вдалося пошукати</string>
+    <string name="discovery_connector_searching">Шукаю…</string>
+    <string name="discovery_connector_none">Нічого не знайдено</string>
+    <string name="discovery_connector_none_hint">Переконайтеся, що пристрої увімкнені й у цьому Wi-Fi, або додайте пристрій за IP-адресою нижче.</string>
+    <string name="discovery_added">Додано</string>
+    <string name="discovery_firmware">Прошивка %1$s</string>
+    <string name="discovery_ip_title">Додати за IP-адресою</string>
+    <string name="discovery_ip_text">Якщо сканування нічого не знаходить, роутер може блокувати широкомовні пакети. Введіть адресу пристрою зі списку підключених у роутері.</string>
+    <string name="discovery_ip_label">IP-адреса</string>
+    <string name="discovery_ip_invalid">Введіть адресу на кшталт 192.0.2.10</string>
+    <string name="discovery_ip_nothing">За адресою %1$s ніхто не відповів.</string>
+    <string name="add_sheet_title">Додати пристрій</string>
+    <string name="add_sheet_room">Кімната</string>
+    <string name="add_sheet_confirm">Додати в дім</string>
+    <string name="message_device_added">%1$s додано у ваш дім</string>
+
+    <!-- Automations -->
+    <string name="automations_empty_title">Хай дім працює на вас</string>
+    <string name="automations_empty_text">Увімкніть кондиціонер до свого приходу або отримайте повідомлення, коли в кімнаті стане надто спекотно. Автоматизації працюють на цьому телефоні, навіть без інтернету.</string>
+    <string name="automation_create_first">Створити автоматизацію</string>
+    <string name="automation_new">Нова автоматизація</string>
+    <string name="automation_edit">Змінити автоматизацію</string>
+    <string name="automation_name_label">Назва</string>
+    <string name="automation_when">Коли</string>
+    <string name="automation_then">Тоді</string>
+    <string name="trigger_time">Час доби</string>
+    <string name="trigger_device">Пристрій</string>
+    <string name="trigger_repeat">Повтор</string>
+    <string name="days_every_day">Щодня</string>
+    <string name="days_workdays">Робочі дні</string>
+    <string name="days_weekend">Вихідні</string>
+    <string name="time_picker_title">Виберіть час</string>
+    <string name="automation_device_label">Пристрій</string>
+    <string name="automation_value_label">Значення</string>
+    <string name="automation_add_device_action">Керувати пристроєм</string>
+    <string name="automation_add_notify_action">Надіслати сповіщення</string>
+    <string name="automation_action_device">Керувати пристроєм</string>
+    <string name="automation_action_notify">Надіслати сповіщення</string>
+    <string name="automation_notify_title">Заголовок</string>
+    <string name="automation_notify_text">Повідомлення</string>
+    <string name="automation_remove_action">Прибрати дію</string>
+    <string name="automation_no_devices_hint">Спершу додайте пристрій, щоб використати його в автоматизаціях.</string>
+    <string name="automation_device_missing">Цей пристрій прибрано. Виберіть інший.</string>
+    <string name="automation_enabled">Увімкнено</string>
+    <string name="automation_enabled_text">Запускається сама, коли настає час</string>
+    <string name="automation_run_once">Виконати один раз</string>
+    <string name="automation_run_once_text">Вимикається після виконання. Якщо пристрій не прийняв зміну, вона лишається ввімкненою і спробує знову наступного разу.</string>
+    <string name="repeat_once">Один раз</string>
+    <string name="summary_pair">%1$s · %2$s</string>
+    <string name="automation_run_now">Виконати зараз</string>
+    <string name="automation_delete_title">Видалити автоматизацію?</string>
+    <string name="automation_delete_text">«%1$s» буде видалено.</string>
+    <string name="automation_unknown_device">Невідомий пристрій</string>
+    <string name="automation_a_device">пристрій</string>
+    <string name="automation_auto_name_time">О %1$s</string>
+    <string name="automation_auto_name_state">Коли змінюється %1$s</string>
+    <string name="automation_last_ran">Востаннє виконано о %1$s</string>
+    <string name="automation_last_ran_on">Востаннє виконано %1$s о %2$s</string>
+    <string name="automation_failed_title">%1$s не завершилася</string>
+    <string name="automation_failed_text">Не вдалося змінити %1$s: %2$s</string>
+    <string name="message_automation_running">Виконую «%1$s»…</string>
+    <string name="problem_trigger_device">Виберіть пристрій і значення, за яким стежити.</string>
+    <string name="problem_trigger_value">Виберіть значення для порівняння.</string>
+    <string name="problem_no_actions">Додайте хоча б одну дію.</string>
+    <string name="problem_empty_device_action">Кожна дія з пристроєм потребує хоча б однієї зміни.</string>
+    <string name="problem_empty_notification">Дайте кожному сповіщенню заголовок або текст.</string>
+    <string name="op_eq">дорівнює</string>
+    <string name="op_ne">не дорівнює</string>
+    <string name="op_gt">більше за</string>
+    <string name="op_ge">щонайменше</string>
+    <string name="op_lt">менше за</string>
+    <string name="op_le">щонайбільше</string>
+    <string name="trigger_time_summary">О %1$s · %2$s</string>
+    <string name="trigger_state_summary">Коли %1$s %2$s %3$s %4$s</string>
+    <string name="action_set_summary">%1$s → %2$s</string>
+    <string name="action_change_summary">%1$s: %2$s</string>
+    <string name="action_notify_summary">Сповістити: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_hub">Хаб</string>
+    <string name="settings_background">Хаб у фоні</string>
+    <string name="settings_background_text">Перевіряти пристрої й виконувати автоматизації, коли застосунок закрито, і після перезапуску. Тихе сповіщення показує, що хаб працює.</string>
+    <string name="settings_poll_foreground">Коли застосунок відкрито, перевіряти кожні</string>
+    <string name="settings_poll_background">У фоні перевіряти кожні</string>
+    <string name="interval_seconds">%1$d с</string>
+    <string name="interval_minutes">%1$d хв</string>
+    <string name="settings_permissions">Дозволи</string>
+    <string name="settings_notifications">Сповіщення</string>
+    <string name="settings_notifications_on">Дозволено</string>
+    <string name="settings_notifications_off">Вимкнено, тож автоматизації не зможуть вас сповістити</string>
+    <string name="settings_battery">Батарея</string>
+    <string name="settings_battery_on">Без обмежень, тож автоматизації виконуються вчасно</string>
+    <string name="settings_battery_off">Android може призупиняти хаб, щоб економити батарею</string>
+    <string name="battery_dialog_title">Дозволити хабу працювати без обмежень?</string>
+    <string name="battery_dialog_text">Android призупиняє фонові застосунки, щоб економити батарею, і автоматизації можуть запізнюватися. Дозвольте Home Controller працювати без обмежень, щоб хаб тримав розклад.</string>
+    <string name="settings_appearance">Вигляд</string>
+    <string name="settings_theme">Тема</string>
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+    <string name="settings_dynamic_color">Кольори шпалер</string>
+    <string name="settings_dynamic_color_text">Брати кольори з ваших шпалер</string>
+    <string name="settings_home">Дім</string>
+    <string name="settings_rooms">Кімнати</string>
+    <string name="settings_about_section">Про застосунок</string>
+    <string name="settings_plugins">Плагіни</string>
+    <string name="settings_about">Про Home Controller</string>
+    <plurals name="plugins_installed">
+        <item quantity="one">Встановлено %d плагін</item>
+        <item quantity="few">Встановлено %d плагіни</item>
+        <item quantity="many">Встановлено %d плагінів</item>
+        <item quantity="other">Встановлено %d плагіна</item>
+    </plurals>
+
+    <!-- Plugins -->
+    <string name="plugins_intro">Кожна родина пристроїв — окремий плагін. Кожен плагін говорить з пристроями напряму у вашому Wi-Fi: без хмари й акаунта.</string>
+    <string name="plugin_version">Версія %1$s</string>
+    <string name="plugin_built_in">Вбудований</string>
+    <string name="plugin_homepage">Вебсайт</string>
+    <string name="plugins_more_title">Буде більше плагінів</string>
+    <string name="plugins_more_text">Телевізори, вимикачі, ІЧ-пульти та інше. Кожен — невеликий плагін, і внески вітаються.</string>
+    <string name="plugins_contribute">Долучитися на GitHub</string>
+    <string name="category_climate">Клімат</string>
+    <string name="category_tv">Телевізори</string>
+    <string name="category_switch">Вимикачі й розетки</string>
+    <string name="category_light">Освітлення</string>
+    <string name="category_sensor">Датчики</string>
+    <string name="category_media">Медіа</string>
+    <string name="category_other">Інше</string>
+
+    <!-- About -->
+    <string name="about_version">Версія %1$s</string>
+    <string name="about_version_code">Версія %1$s (%2$d)</string>
+    <string name="about_tagline">Керуйте домом напряму у своєму Wi-Fi. Телефон і є хабом: без сервера, хмари й акаунта.</string>
+    <string name="about_source">Вихідний код</string>
+    <string name="about_license">Ліцензія</string>
+    <string name="about_license_text">Відкритий код під ліцензією Apache 2.0</string>
+    <string name="about_privacy">Приватність</string>
+    <string name="about_privacy_text">Без аналітики й хмари. Ніщо не виходить за межі вашої мережі.</string>
+    <string name="about_credits">Подяки</string>
+    <string name="about_credit_greeclimate">За опис протоколу Gree</string>
+    <string name="about_credit_gree_remote">За опис протоколу Gree</string>
+    <string name="about_credit_suncalc">Час сходу й заходу сонця, обчислений на телефоні</string>
+
+    <!-- Hub notifications -->
+    <string name="channel_hub">Стан хаба</string>
+    <string name="channel_hub_description">Тихе сповіщення, яке показує, що хаб працює.</string>
+    <string name="channel_automations">Автоматизації</string>
+    <string name="channel_automations_description">Повідомлення від ваших автоматизацій.</string>
+    <string name="channel_problems">Проблеми</string>
+    <string name="channel_problems_description">Коли автоматизація не може дістатися до пристрою.</string>
+    <string name="hub_notification_title_empty">Хаб працює</string>
+    <plurals name="hub_notification_title">
+        <item quantity="one">Хаб працює · %d пристрій</item>
+        <item quantity="few">Хаб працює · %d пристрої</item>
+        <item quantity="many">Хаб працює · %d пристроїв</item>
+        <item quantity="other">Хаб працює · %d пристрою</item>
+    </plurals>
+    <string name="hub_notification_text_empty">Пристроїв ще немає</string>
+    <string name="hub_notification_text_all_online">Усі пристрої в мережі</string>
+    <string name="hub_notification_text_none_online">Зараз пристрої недоступні</string>
+    <string name="hub_notification_text_some" tools:ignore="PluralsCandidate">У мережі: %1$d, недоступні: %2$d</string>
+
+    <string name="action_try_again">Спробувати ще</string>
+
+    <!-- Pairing -->
+    <string name="pairing_title">Налаштувати новий пристрій</string>
+    <string name="pairing_entry_title">Налаштувати новий пристрій</string>
+    <string name="pairing_entry_text">Для пристрою, якого ще немає у вашому Wi-Fi</string>
+    <string name="pairing_choose_title">Що ви налаштовуєте?</string>
+    <string name="pairing_choose_text">Виберіть тип пристрою. Кожен плагін знає, як підключити свої пристрої до вашого Wi-Fi.</string>
+    <string name="pairing_none">Жоден зі встановлених плагінів поки не вміє налаштовувати нові пристрої.</string>
+    <string name="pairing_steps_text">Спершу переведіть пристрій у режим налаштування:</string>
+    <string name="pairing_tip_time">Режим налаштування триває близько 8 хвилин. Якщо час вийде, почніть знову з першого кроку.</string>
+    <string name="pairing_ready">Він у режимі налаштування</string>
+    <string name="pairing_hotspot_title">Знайдіть пристрій</string>
+    <string name="pairing_hotspot_text">У режимі налаштування пристрій відкриває власну точку доступу Wi-Fi. Виберіть її нижче.</string>
+    <string name="pairing_permission_title">Дозвольте пошук Wi-Fi</string>
+    <string name="pairing_permission_text">Щоб знайти точку доступу пристрою, Android потребує дозволів на місцезнаходження й пристрої поблизу: так він дає застосункам бачити мережі Wi-Fi. Home Controller шукає лише точку доступу пристрою і не читає ваше місцезнаходження.</string>
+    <string name="pairing_location_off">Увімкніть геолокацію: Android показує застосункам мережі Wi-Fi лише тоді, коли вона ввімкнена.</string>
+    <string name="pairing_hotspots_nearby">Точки доступу пристроїв поблизу</string>
+    <string name="pairing_hotspots_scanning">Шукаю точки доступу пристроїв…</string>
+    <string name="pairing_hotspots_none">Точок доступу пристроїв не знайдено</string>
+    <string name="pairing_hotspots_none_hint">Переконайтеся, що пристрій у режимі налаштування й поруч із телефоном, і оновіть.</string>
+    <string name="pairing_hotspots_throttled">Android обмежує, як часто застосунки можуть шукати Wi-Fi. Зачекайте хвилину й оновіть або введіть назву точки доступу нижче.</string>
+    <string name="pairing_signal">Сигнал: %1$s</string>
+    <string name="signal_strong">сильний</string>
+    <string name="signal_good">добрий</string>
+    <string name="signal_weak">слабкий</string>
+    <string name="pairing_manual_title">Введіть назву точки доступу</string>
+    <string name="pairing_manual_text">Не бачите її в списку? Введіть назву точки доступу так, як вона показана в налаштуваннях Wi-Fi телефону.</string>
+    <string name="pairing_manual_label">Назва точки доступу</string>
+    <string name="pairing_manual_unusual">Не схоже на точку доступу такого пристрою, але спробувати можна.</string>
+    <string name="pairing_manual_use">Використати цю точку доступу</string>
+    <string name="pairing_home_title">Ваш домашній Wi-Fi</string>
+    <string name="pairing_home_text">Пристрій з точкою доступу «%1$s» приєднається до цієї мережі. Введіть її назву й пароль.</string>
+    <string name="pairing_home_ssid">Назва Wi-Fi</string>
+    <string name="pairing_home_password">Пароль Wi-Fi</string>
+    <string name="pairing_show_password">Показати пароль</string>
+    <string name="pairing_hide_password">Сховати пароль</string>
+    <string name="pairing_24ghz_note">Цей пристрій працює лише з Wi-Fi 2,4 ГГц.</string>
+    <string name="pairing_5ghz_warning">Телефон у мережі 5 ГГц, а цьому пристрою потрібна 2,4 ГГц. Якщо роутер має окрему мережу 2,4 ГГц, вкажіть її назву.</string>
+    <string name="pairing_password_note">Пароль іде лише на пристрій. Home Controller його не зберігає.</string>
+    <string name="pairing_connect">Підключити пристрій</string>
+    <string name="pairing_progress_title">Налаштування</string>
+    <string name="pairing_progress_text">Точка доступу пристрою «%1$s»</string>
+    <string name="pairing_stage_join">Підключаюся до пристрою</string>
+    <string name="pairing_stage_send">Надсилаю дані Wi-Fi</string>
+    <string name="pairing_stage_wait">Чекаю, поки він приєднається до вашого Wi-Fi</string>
+    <string name="pairing_stage_done">Готово</string>
+    <string name="pairing_join_prompt">Якщо Android запропонує підключитися до пристрою, натисніть «Підключитися».</string>
+    <string name="pairing_manual_join">Відкрийте налаштування Wi-Fi і підключіться до «%1$s» (пароль: %2$s), потім поверніться сюди.</string>
+    <string name="pairing_no_password">без пароля</string>
+    <plurals name="pairing_searches">
+        <item quantity="one">Шукав у вашому Wi-Fi %d раз</item>
+        <item quantity="few">Шукав у вашому Wi-Fi %d рази</item>
+        <item quantity="many">Шукав у вашому Wi-Fi %d разів</item>
+        <item quantity="other">Шукав у вашому Wi-Fi %d раза</item>
+    </plurals>
+    <string name="pairing_fail_join">Не вдалося підключитися до точки доступу пристрою</string>
+    <string name="pairing_fail_join_help">Режим налаштування ще ввімкнений? Він триває близько 8 хвилин. Знову переведіть пристрій у режим налаштування й спробуйте ще. Якщо Android питав про підключення, натисніть «Підключитися».</string>
+    <string name="pairing_fail_send">Не вдалося надіслати дані Wi-Fi</string>
+    <string name="pairing_fail_send_help">Телефон втратив точку доступу пристрою. Тримайте телефон ближче до пристрою і спробуйте ще.</string>
+    <string name="pairing_fail_unconfirmed">Пристрій не підтвердив</string>
+    <string name="pairing_fail_unconfirmed_help">Деякі пристрої приймають дані Wi-Fi без відповіді. Зачекайте, поки він зʼявиться у вашому Wi-Fi, або спробуйте ще.</string>
+    <string name="pairing_fail_not_found">Пристрій не зʼявився у вашому Wi-Fi</string>
+    <string name="pairing_fail_not_found_help">Перевірте пароль Wi-Fi і що мережа 2,4 ГГц. Потім знову переведіть пристрій у режим налаштування й спробуйте ще.</string>
+    <string name="pairing_wait_anyway">Однаково чекати</string>
+    <string name="pairing_search_again">Шукати далі</string>
+    <string name="pairing_cancelled">Налаштування скасовано.</string>
+    <string name="pairing_found">Знайдено</string>
+    <string name="pairing_added">Додано у ваш дім</string>
+    <string name="pairing_open_device">Відкрити пристрій</string>
+    <string name="pairing_done">Готово</string>
+
+    <!-- Diagnostics -->
+    <string name="settings_diagnostics">Діагностика</string>
+    <string name="settings_diagnostics_text">Що робили хаб і плагіни — щоб поділитися, коли щось не так</string>
+    <string name="diagnostics_verbose">Докладний журнал</string>
+    <string name="diagnostics_verbose_text">Записує ще й кожне повідомлення до пристроїв і від них. Журнал росте значно швидше; вимкніть, коли закінчите.</string>
+    <string name="diagnostics_privacy">У журналі є назви пристроїв і їхні адреси у вашій мережі. Паролів у ньому немає ніколи.</string>
+    <string name="diagnostics_follow">Стежити</string>
+    <string name="diagnostics_all_sources">Усі</string>
+    <string name="diagnostics_empty">Журнал поки порожній</string>
+    <string name="diagnostics_share">Поділитися журналом</string>
+    <string name="diagnostics_share_title">Поділитися журналом Home Controller</string>
+    <string name="diagnostics_share_none">Немає застосунку, що може прийняти журнал</string>
+    <string name="diagnostics_clear">Очистити журнал</string>
+    <string name="diagnostics_clear_title">Очистити журнал?</string>
+    <string name="diagnostics_clear_text">Усе записане досі буде видалено з цього телефону.</string>
+
+    <!-- Import from the PC -->
+    <string name="import_entry_title">Імпорт пристроїв Tuya</string>
+    <string name="import_entry_text">Відскануйте QR-код, який показує ваш ПК: він додає кожну розетку й лічильник з ключем. Нічого не йде через хмару.</string>
+    <string name="import_scan_prompt">Відскануйте QR-код імпорту на екрані ПК</string>
+    <string name="import_looking">Шукаю пристрої у вашому Wi-Fi…</string>
+    <string name="import_review_title">Додати ці пристрої?</string>
+    <string name="import_review_text">Їхні ключі зберігаються на цьому телефоні в зашифрованому вигляді.</string>
+    <string name="import_seen">Зараз у цьому Wi-Fi</string>
+    <string name="import_not_seen">Зараз не видно: знайдеться, коли його ввімкнуть</string>
+    <string name="import_invalid">Цей QR-код не є імпортом Home Controller.</string>
+    <plurals name="import_add_n">
+        <item quantity="one">Додати %d пристрій</item>
+        <item quantity="few">Додати %d пристрої</item>
+        <item quantity="many">Додати %d пристроїв</item>
+        <item quantity="other">Додати %d пристрою</item>
+    </plurals>
+    <plurals name="message_devices_imported">
+        <item quantity="one">%d пристрій додано у ваш дім</item>
+        <item quantity="few">%d пристрої додано у ваш дім</item>
+        <item quantity="many">%d пристроїв додано у ваш дім</item>
+        <item quantity="other">%d пристрою додано у ваш дім</item>
+    </plurals>
+
+    <!-- Power button -->
+    <string name="device_menu_power_button">Кнопка живлення…</string>
+    <string name="power_button_title">Кнопка живлення</string>
+    <string name="power_button_show">Показувати</string>
+    <string name="power_button_show_text">Одне натискання перемикає, тут і на головному екрані</string>
+    <string name="power_button_confirm">Спершу питати</string>
+    <string name="power_button_confirm_text">Кожне натискання питає перед перемиканням, тут і на головному екрані</string>
+    <string name="power_button_hide">Сховати з головного екрана</string>
+    <string name="power_button_hide_text">Без кнопки живлення на плитці головного екрана; перемикайте на цій сторінці</string>
+    <string name="power_confirm_on">Увімкнути %1$s?</string>
+    <string name="power_confirm_off">Вимкнути %1$s?</string>
+    <string name="power_confirm_text">Цей пристрій питає перед зміною живлення. Змінити це можна в його меню: «Кнопка живлення».</string>
+    <string name="action_turn_on">Увімкнути</string>
+    <string name="action_turn_off">Вимкнути</string>
+
+    <!-- Power history -->
+    <string name="history_title">Історія потужності</string>
+    <string name="history_range_day">24 год</string>
+    <string name="history_range_week">7 днів</string>
+    <string name="history_range_month">30 днів</string>
+    <string name="history_now">Зараз</string>
+    <string name="history_peak">Пік</string>
+    <string name="history_today">Сьогодні</string>
+    <string name="history_month">Цей місяць</string>
+    <string name="history_power_axis">Потужність · до %1$s</string>
+    <string name="history_energy_hourly">Енергія за годину · до %1$s</string>
+    <string name="history_energy_daily">Енергія за добу · до %1$s</string>
+    <string name="history_collecting">Збираю показники: телефон зберігає їх, поки він у цьому Wi-Fi і хаб працює. Перші точки зʼявляться протягом хвилини.</string>
+    <string name="history_note_counter">Енергія з власного лічильника пристрою: точна, навіть за час, коли телефона не було поруч.</string>
+    <string name="history_note_power">Енергія обчислена з показників потужності, поки телефон був удома; час відсутності не враховано.</string>
+
+    <!-- Per-device schedules -->
+    <string name="schedules_title">Розклади</string>
+    <string name="schedules_add">Додати розклад</string>
+    <string name="schedules_empty">Розкладів ще немає. Розклад перемикає пристрій у заданий час у вибрані дні.</string>
+    <string name="schedules_background_off">Розклади працюють на цьому телефоні: зараз лише коли застосунок відкрито. Увімкніть «Хаб у фоні», щоб вони працювали й коли його закрито.</string>
+    <string name="schedules_open_settings">Відкрити налаштування</string>
+
+    <!-- Sunrise and sunset triggers -->
+    <string name="trigger_at_time">У певний час</string>
+    <string name="sun_sunrise">Схід сонця</string>
+    <string name="sun_sunset">Захід сонця</string>
+    <string name="sun_at_sunrise">На сході сонця</string>
+    <string name="sun_at_sunset">На заході сонця</string>
+    <string name="sun_before_sunrise">За %1$s до сходу сонця</string>
+    <string name="sun_after_sunrise">Через %1$s після сходу сонця</string>
+    <string name="sun_before_sunset">За %1$s до заходу сонця</string>
+    <string name="sun_after_sunset">Через %1$s після заходу сонця</string>
+    <string name="sun_short_before">%1$s − %2$s</string>
+    <string name="sun_short_after">%1$s + %2$s</string>
+    <string name="duration_hours">%1$d год</string>
+    <string name="duration_hours_minutes">%1$d год %2$d хв</string>
+    <string name="action_earlier">Раніше</string>
+    <string name="action_later">Пізніше</string>
+    <string name="sun_next">Наступний: %1$s</string>
+    <string name="sun_next_none">Найближчого тижня в ці дні сонце тут не сходить і не заходить.</string>
+    <string name="when_today">сьогодні о %1$s</string>
+    <string name="when_tomorrow">завтра о %1$s</string>
+    <string name="when_day">%1$s о %2$s</string>
+    <string name="sun_needs_location">Вкажіть розташування дому, щоб телефон знав, коли сходить і заходить сонце. До того розклади за сонцем не працюють.</string>
+    <string name="sun_needs_location_short">Потрібне розташування дому: вкажіть у налаштуваннях</string>
+    <string name="sun_set_location">Вказати розташування дому</string>
+
+    <!-- Home location -->
+    <string name="settings_home_location">Розташування дому</string>
+    <string name="settings_home_location_none">Не вказано. Воно потрібне для розкладів за сонцем.</string>
+    <string name="settings_home_location_today">%1$s · сьогодні схід %2$s, захід %3$s</string>
+    <string name="location_title">Розташування дому</string>
+    <string name="location_text">Схід і захід сонця обчислюються на цьому телефоні за розташуванням вашого дому. Використайте місцезнаходження телефону, коли ви вдома, або введіть його. Воно лишається на телефоні, округлене приблизно до кілометра.</string>
+    <string name="location_use_phone">Взяти місцезнаходження телефону</string>
+    <string name="location_finding">Визначаю місцезнаходження…</string>
+    <string name="location_found">Знайдено. Натисніть «Зберегти».</string>
+    <string name="location_off">Геолокацію на телефоні вимкнено. Увімкніть її або введіть розташування нижче.</string>
+    <string name="location_denied">Без доступу до геолокації введіть розташування нижче.</string>
+    <string name="location_not_found">Телефон не зміг визначити, де він. Спробуйте ще або введіть розташування нижче.</string>
+    <string name="location_field">Широта, довгота</string>
+    <string name="location_field_hint">Як у картах, наприклад 51.48, -0.01</string>
+    <string name="location_invalid">Введіть так: 51.48, -0.01</string>
+
+    <!-- Weekend -->
+    <string name="settings_weekend">Вихідні</string>
+    <string name="weekend_two_days">%1$s і %2$s</string>
+    <string name="weekend_from_region">як заведено у вашому регіоні</string>
+    <string name="weekend_region_default">Як заведено у вашому регіоні</string>
+    <string name="weekend_dialog_text">Використовується для швидкого вибору «Робочі дні» та «Вихідні» в розкладах.</string>
+
+    <!-- Вартість електрики -->
+    <string name="cost_title">Вартість електрики</string>
+    <string name="cost_waiting">Чекаю перших показників…</string>
+    <string name="cost_session">Натекло з початку показу</string>
+    <string name="cost_session_info">%1$s кВт·год за %2$s хв</string>
+    <string name="cost_reset">Почати з нуля</string>
+    <string name="cost_now">Зараз</string>
+    <string name="cost_per_hour">гривень за годину</string>
+    <string name="cost_zone">Зона тарифу</string>
+    <string name="cost_zone_price">%1$s, %2$s грн/кВт·год</string>
+    <string name="cost_today">Сьогодні з цієї розетки</string>
+    <string name="cost_month">Цей місяць</string>
+    <string name="cost_kwh">%1$s кВт·год</string>
+    <string name="cost_kwh_uah">%1$s кВт·год = %2$s грн</string>
+    <string name="cost_uah_day">%1$s грн/добу</string>
+    <string name="cost_meter">Мій лічильник</string>
+    <string name="cost_price_label">Денна ціна за кВт·год, грн</string>
+    <string name="cost_apply">Застосувати</string>
+    <string name="cost_applied">Застосовано: %1$s грн/кВт·год, %2$s</string>
+    <string name="cost_price_invalid">Введіть ціну від 0 до 100</string>
+    <string name="cost_note">Нічна й пікова ціни рахуються від денної за коефіцієнтами зон. Вартість — це погодинна енергія вище за поточною ціною, тож нова ціна перераховує й минулі години.</string>
+    <string name="meter_1">однозонний</string>
+    <string name="meter_2">двозонний</string>
+    <string name="meter_3">тризонний</string>
+    <string name="meter_short_1">1 зона</string>
+    <string name="meter_short_2">2 зони</string>
+    <string name="meter_short_3">3 зони</string>
+    <string name="zone_all">цілодобово</string>
+    <string name="zone_night">ніч</string>
+    <string name="zone_day">день</string>
+    <string name="zone_peak">пік</string>
+    <string name="zone_half">напівпік</string>
+    <string name="calc_devices">Прилади клієнта</string>
+    <string name="calc_name">Назва приладу</string>
+    <string name="calc_default_name">прилад</string>
+    <string name="calc_hours">Годин на добу</string>
+    <string name="calc_watts">або Вт</string>
+    <string name="calc_record">Записати поточну потужність</string>
+    <string name="calc_device_row">%1$s Вт · %2$s год · %3$s кВт·год</string>
+    <string name="calc_title">Нічна зарядка батареї: скільки це економить</string>
+    <string name="calc_client_meter">Лічильник клієнта</string>
+    <string name="calc_when_peak">Прилади працюють у пік</string>
+    <string name="calc_eff">ККД, %</string>
+    <string name="calc_capacity">Батарея, кВт·год</string>
+    <string name="calc_station_price">Ціна станції, грн</string>
+    <string name="calc_cycles">Ресурс, циклів</string>
+    <string name="calc_add_first">Додайте прилади вище: увімкніть прилад у розетку і натисніть «Записати поточну потужність».</string>
+    <string name="calc_energy">Енергія приладів за добу</string>
+    <string name="calc_fits">Влазить у батарею</string>
+    <string name="calc_grid">З мережі вдень, %1$s грн</string>
+    <string name="calc_batt">З батареї: вночі %1$s грн, ККД %2$s%%</string>
+    <string name="calc_saving">Економія тарифу</string>
+    <string name="calc_per_day_month">%1$s грн/добу · %2$s грн/міс</string>
+    <string name="calc_saving_sub">на %1$s%% дешевше, %2$s грн на рік</string>
+    <string name="calc_wear">Знос батареї</string>
+    <string name="calc_net">Чиста вигода</string>
+    <string name="calc_single_zone">З однозонним лічильником нічна зарядка нічого не економить: ціна вдень і вночі однакова.</string>
+    <string name="calc_note">Та сама добова енергія з мережі за денною ціною проти батареї, зарядженої вночі, з урахуванням втрат на заряд-розряд. Без ціни станції знос не враховується.</string>
+</resources>

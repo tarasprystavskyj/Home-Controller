@@ -27,6 +27,11 @@ data class PowerHistoryUi(
     val monthKwh: Double?,
     /** Energy comes from the device's own counter (exact across gaps), not from integrating power. */
     val fromCounter: Boolean,
+    /**
+     * Energy per hour (hour start -> kWh) from the start of the month (or of the range, if earlier) up to the hour
+     * that is still filling. Tariff zones change on whole hours, so this prices energy by zone exactly.
+     */
+    val hourly: List<Pair<Long, Double>> = emptyList(),
 ) {
     val empty: Boolean get() = line.isEmpty()
 }
@@ -91,6 +96,7 @@ object HistoryQuery {
             todayKwh = daily[today],
             monthKwh = daily.filterKeys { it >= monthStart }.values.takeIf { it.isNotEmpty() }?.sum(),
             fromCounter = counter != null,
+            hourly = hourly,
         )
     }
 

@@ -67,6 +67,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.material.icons.rounded.PowerSettingsNew
 import com.technlov.homecontroller.data.PowerButton
 import com.technlov.homecontroller.history.PowerHistoryUi
+import com.technlov.homecontroller.history.HistoryMath
 import com.technlov.homecontroller.history.HistoryRange
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -513,6 +514,14 @@ private fun DeviceContent(
                 Column {
                     SectionHeader(stringResource(R.string.history_title))
                     PowerHistoryCard(history, onHistoryRange)
+                }
+            }
+            item(key = "cost") {
+                val powerKey = remember(caps) { HistoryMath.plan(caps).powerKey }
+                val livePowerW = powerKey?.let { (state?.values?.get(it) as? Value.Num)?.v }
+                Column {
+                    SectionHeader(stringResource(R.string.cost_title))
+                    CostSection(history, livePowerW)
                 }
             }
         }
