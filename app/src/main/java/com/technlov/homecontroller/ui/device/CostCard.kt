@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -135,6 +136,29 @@ private fun costSince(history: PowerHistoryUi, fromMillis: Long, base: Double, z
     return kwh to uah
 }
 
+/**
+ * "Since the demo started", as a point in time: the hour it began in and the energy that hour already held. Priced on
+ * demand, so the same demo can be shown under a single-rate, two-zone or three-zone tariff.
+ */
+data class DemoSession(val at: Long, val hour0: Long, val partialKwh: Double) {
+    private fun since(h: PowerHistoryUi) = h.hourly.filter { it.first >= hour0 }
+
+    fun kwh(h: PowerHistoryUi, runKwh: Double): Double = since(h).sumOf { it.second } - partialKwh + runKwh
+
+    fun uah(h: PowerHistoryUi, runKwh: Double, priceNow: Double, priceAt: (Long) -> Double): Double =
+        since(h).sumOf { it.second * priceAt(it.first) } - partialKwh * priceAt(hour0) + runKwh * priceNow
+
+    companion object {
+        private const val HOUR = 3_600_000L
+
+        fun start(h: PowerHistoryUi, now: Long, runKwh: Double): DemoSession {
+            val hour0 = now - Math.floorMod(now, HOUR)
+            val held = h.hourly.firstOrNull { it.first == hour0 }?.second ?: 0.0
+            return DemoSession(now, hour0, held + runKwh)
+        }
+    }
+}
+
 private fun nf(digits: Int) = NumberFormat.getNumberInstance().apply {
     minimumFractionDigits = digits
     maximumFractionDigits = digits
@@ -156,24 +180,38 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
     val month0 = Instant.ofEpochMilli(now0).atZone(tz).toLocalDate().withDayOfMonth(1).atStartOfDay(tz).toInstant().toEpochMilli()
     val (todayKwh, todayUah) = costSince(history, day0, base, zones, tz)
     val (monthKwh, monthUah) = costSince(history, month0, base, zones, tz)
+    val (allKwh, allUah) = costSince(history, Long.MIN_VALUE, base, zones, tz)
     val powerW = livePowerW ?: history.nowW ?: 0.0
 
     var frameMs by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) withFrameMillis { frameMs = System.currentTimeMillis() } }
+    // The zone, and so the price, follows the clock: at 23:00, 7:00 and the peak edges it changes at once.
     val zoneNow = Tariffs.zone(zones, frameMs, tz)
     val priceNow = base * zoneNow.coef
-    val dt = ((frameMs - now0).coerceIn(0L, 120_000L)) / 3_600_000.0
+    // Run on from the last STORED sample (samples are kept per minute, so the stored energy ends a minute or two
+    // before "now"); running from [now0] instead lost that stretch at every reload and stalled the counter.
+    val anchor = history.lastSampleAt ?: now0
+    val dt = ((frameMs - anchor).coerceIn(0L, 300_000L)) / 3_600_000.0
     val runKwh = powerW / 1000 * dt
     // Never runs backwards within a day and a tariff; a new day or a new price starts it afresh.
     var shown by remember(base, zones, day0) { mutableStateOf(0.0) }
     shown = maxOf(shown, todayUah + runKwh * priceNow)
     val shownKwh = todayKwh + runKwh
 
-    // Since the demo started: kept in memory only; "Start from zero" (or a new price) resets it.
-    var sessionStart by remember(base, zones) { mutableStateOf<Triple<Double, Double, Long>?>(null) }
-    if (sessionStart == null && history.hourly.isNotEmpty()) sessionStart = Triple(shown, shownKwh, frameMs)
-    val ses = sessionStart
+    // Since the demo started, kept in memory. Stored as a point in time (hour + energy already in that hour), so it
+    // can be priced under any tariff: switching the meter type does not reset it, "Start from zero" does.
+    var session by remember { mutableStateOf<DemoSession?>(null) }
+    if (session == null && history.hourly.isNotEmpty()) session = DemoSession.start(history, frameMs, runKwh)
+    val ses = session
+    val sesKwh = ses?.kwh(history, runKwh) ?: 0.0
+    val sesUah = ses?.uah(history, runKwh, priceNow) { h -> base * Tariffs.zone(zones, h, tz).coef } ?: 0.0
+    var shownSes by remember(ses, base, zones) { mutableStateOf(0.0) }
+    shownSes = maxOf(shownSes, sesUah)
     val ratePerSec = powerW / 1000 / 3600 * priceNow
+    // Saving against a single-rate meter (every hour at the day price), for the whole stored history and the demo.
+    val savingAll = (allKwh + runKwh) * base - (allUah + runKwh * priceNow)
+    val savingSes = sesKwh * base - sesUah
+    val firstHour = history.hourly.firstOrNull()?.first
 
     val scheme = MaterialTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -187,18 +225,18 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
                     Text(stringResource(R.string.cost_waiting), color = scheme.onSurfaceVariant)
                 }
                 Text(stringResource(R.string.cost_session), style = MaterialTheme.typography.labelMedium, color = scheme.onSurfaceVariant)
-                Odometer(if (ses != null) (shown - ses.first).coerceAtLeast(0.0) else 0.0, ratePerSec)
+                Odometer(shownSes, ratePerSec)
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         if (ses != null) stringResource(
                             R.string.cost_session_info,
-                            nf(4).format((shownKwh - ses.second).coerceAtLeast(0.0)),
-                            nf(1).format((frameMs - ses.third) / 60_000.0),
+                            nf(4).format(sesKwh.coerceAtLeast(0.0)),
+                            nf(1).format((frameMs - ses.at) / 60_000.0),
                         ) else "",
                         style = MaterialTheme.typography.bodySmall,
                         color = scheme.onSurfaceVariant,
                     )
-                    OutlinedButton(onClick = { sessionStart = Triple(shown, shownKwh, System.currentTimeMillis()) }) {
+                    OutlinedButton(onClick = { session = DemoSession.start(history, System.currentTimeMillis(), runKwh) }) {
                         Text(stringResource(R.string.cost_reset))
                     }
                 }
@@ -220,6 +258,25 @@ fun CostSection(history: PowerHistoryUi, livePowerW: Double?) {
                 Text(stringResource(R.string.cost_today), style = MaterialTheme.typography.labelMedium, color = scheme.onSurfaceVariant)
                 Odometer(shown, ratePerSec)
                 LabelValue(stringResource(R.string.cost_month), stringResource(R.string.cost_kwh_uah, nf(3).format(monthKwh + runKwh), nf(2).format(monthUah + runKwh * priceNow)))
+                if (zones > 1) {
+                    HorizontalDivider()
+                    Text(stringResource(R.string.cost_saving_title), style = MaterialTheme.typography.titleSmall)
+                    val dateFmt = remember { java.time.format.DateTimeFormatter.ofPattern("d MMM, HH:mm") }
+                    val good = Color(0xFF15803D)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(
+                            stringResource(R.string.cost_saving_all, firstHour?.let { dateFmt.format(Instant.ofEpochMilli(it).atZone(tz)) } ?: "—"),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f).padding(end = 12.dp),
+                        )
+                        Text(nf(2).format(savingAll) + " ₴", fontWeight = FontWeight.Bold, color = if (savingAll >= 0) good else scheme.error)
+                    }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(stringResource(R.string.cost_saving_session), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f).padding(end = 12.dp))
+                        Text(nf(3).format(savingSes) + " ₴", fontWeight = FontWeight.Bold, color = if (savingSes >= 0) good else scheme.error)
+                    }
+                    Text(stringResource(R.string.cost_saving_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
+                }
                 HorizontalDivider()
                 TariffEditor(base, zones) { b, z ->
                     base = b; zones = z
@@ -288,7 +345,13 @@ private fun Drum(pos: Float, height: Dp, width: Dp, color: Color, blur: Boolean)
             .clipToBounds()
             .background(Color(0xFF0C0A09), RoundedCornerShape(3.dp)),
     ) {
-        Column(Modifier.graphicsLayer { translationY = -pos * hPx; alpha = if (blur) 0.55f else 1f }) {
+        // unbounded: the strip of 11 digits is taller than the drum's window; without it Compose squeezes every digit
+        // after the first to zero height and the drum only ever shows "0".
+        Column(
+            Modifier
+                .wrapContentHeight(align = Alignment.Top, unbounded = true)
+                .graphicsLayer { translationY = -pos * hPx; alpha = if (blur) 0.55f else 1f },
+        ) {
             for (n in 0..10) {
                 Box(Modifier.size(width, height), contentAlignment = Alignment.Center) {
                     Text(
@@ -316,7 +379,14 @@ private fun TariffEditor(base: Double, zones: Int, onApply: (Double, Int) -> Uni
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(stringResource(R.string.cost_meter), style = MaterialTheme.typography.labelMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            (1..3).forEach { n -> FilterChip(selected = z == n, onClick = { z = n }, label = { Text(chipNames[n - 1]) }) }
+            // The meter type applies at once: the price follows the current hour's zone straight away.
+            (1..3).forEach { n ->
+                FilterChip(selected = z == n, onClick = {
+                    z = n
+                    onApply(base, n)
+                    msg = String.format(appliedFmt, nf(2).format(base), zoneNames[n - 1])
+                }, label = { Text(chipNames[n - 1]) })
+            }
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedTextField(

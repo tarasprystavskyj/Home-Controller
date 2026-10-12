@@ -32,6 +32,8 @@ data class PowerHistoryUi(
      * that is still filling. Tariff zones change on whole hours, so this prices energy by zone exactly.
      */
     val hourly: List<Pair<Long, Double>> = emptyList(),
+    /** Time of the last stored power sample: [hourly] holds energy up to here, not up to [to]. */
+    val lastSampleAt: Long? = null,
 ) {
     val empty: Boolean get() = line.isEmpty()
 }
@@ -67,7 +69,9 @@ object HistoryQuery {
         val today = dayOf(now)
         val monthStart = Instant.ofEpochMilli(now).atZone(zone).toLocalDate().withDayOfMonth(1).atStartOfDay(zone)
             .toInstant().toEpochMilli()
-        val energyFrom = minOf(from, monthStart)
+        // From the first stored reading: the cost card prices the whole history (e.g. the saving against a
+        // single-rate meter "since measuring began"). Hours are small rows, so this stays cheap.
+        val energyFrom = 0L
         val counter = plan.energyCounterKey
         val metric = counter ?: power
         // A counter needs the last reading BEFORE the window to measure the first hour's rise.
@@ -97,6 +101,7 @@ object HistoryQuery {
             monthKwh = daily.filterKeys { it >= monthStart }.values.takeIf { it.isNotEmpty() }?.sum(),
             fromCounter = counter != null,
             hourly = hourly,
+            lastSampleAt = recentPower.lastOrNull()?.atMillis,
         )
     }
 

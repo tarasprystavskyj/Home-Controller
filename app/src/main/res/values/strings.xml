@@ -538,6 +538,10 @@
     <string name="meter_1">single-rate</string>
     <string name="meter_2">two-zone</string>
     <string name="meter_3">three-zone</string>
+    <string name="cost_saving_title">Saving against a single-rate meter</string>
+    <string name="cost_saving_all">Since measuring began (%1$s)</string>
+    <string name="cost_saving_session">Since the demo started</string>
+    <string name="cost_saving_hint">A single-rate meter charges every hour at the day price; here each hour is charged at its own zone.</string>
     <string name="meter_short_1">1 zone</string>
     <string name="meter_short_2">2 zones</string>
     <string name="meter_short_3">3 zones</string>

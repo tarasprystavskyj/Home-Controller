@@ -549,6 +549,10 @@
     <string name="meter_1">однозонний</string>
     <string name="meter_2">двозонний</string>
     <string name="meter_3">тризонний</string>
+    <string name="cost_saving_title">Економія відносно однозонного лічильника</string>
+    <string name="cost_saving_all">За весь час вимірювань (з %1$s)</string>
+    <string name="cost_saving_session">З початку показу</string>
+    <string name="cost_saving_hint">Однозонний лічильник рахує кожну годину за денною ціною; тут кожна година рахується за своєю зоною.</string>
     <string name="meter_short_1">1 зона</string>
     <string name="meter_short_2">2 зони</string>
     <string name="meter_short_3">3 зони</string>
