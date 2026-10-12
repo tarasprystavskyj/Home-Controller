@@ -15,9 +15,10 @@ import java.util.zip.GZIPInputStream
  *
  * Format v1: `HCTUYA1:` + base64url( gzip( UTF-8 JSON ) ), no padding. The JSON is
  * `{"devices":[{"id","key","ver","name","cat","pid","dps":[[dp_id,code,type,scale,unit,writable], ...]}]}` where
- * `ver` may be missing (the app's UDP discovery fills IP and version by matching the device id). Each device becomes
- * a [DeviceRef] with its key and dp spec in [DeviceRef.extras]; [DeviceRef.address] is left empty for discovery to
- * fill. Keys live only in the returned refs (which the app stores in its encrypted storage) and are never logged.
+ * `ver` may be missing (the app's UDP discovery fills IP and version by matching the device id). An optional `"ip"`
+ * (dotted IPv4) becomes [DeviceRef.address] so the device is reachable even where broadcasts are filtered; otherwise
+ * the address is left empty for discovery to fill. Each device becomes a [DeviceRef] with its key and dp spec in
+ * [DeviceRef.extras]. Keys live only in the returned refs (which the app stores in its encrypted storage) and are never logged.
  */
 object TuyaImport {
     const val PREFIX = "HCTUYA1:"
@@ -83,12 +84,23 @@ object TuyaImport {
         return DeviceRef(
             connectorId = TuyaConnector.ID,
             id = id,
-            address = "", // discovery fills the IP by matching the device id
+            // An optional "ip" lets the app connect straight away on networks where the device's UDP broadcast never
+            // arrives (router or phone filtering broadcast, or firmware that does not announce itself). Without it,
+            // discovery fills the IP by matching the device id; a stale "ip" is still corrected by that lookup.
+            address = ipv4(d.optString("ip")),
             name = name,
             category = category(category, productId),
             model = productId,
             extras = extras,
         )
+    }
+
+    /** A dotted IPv4 address, or "" when [text] is missing or not one (then discovery finds the device). */
+    private fun ipv4(text: String?): String {
+        val t = text?.trim().orEmpty()
+        val parts = t.split('.')
+        val ok = parts.size == 4 && parts.all { p -> p.isNotEmpty() && p.length <= 3 && p.all(Char::isDigit) && p.toInt() <= 255 }
+        return if (ok) t else ""
     }
 
     /** `ver` may be a number (3.4) or a string ("3.4"), or missing (discovery fills it). */

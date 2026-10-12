@@ -216,8 +216,10 @@ byte-for-byte against real Tuya-app writes in make-all / tuya-local (`wifi_m604_
 
 The app imports a whole set of devices from one QR code so no 16-character key is ever typed. The code is
 `HCTUYA1:` + base64url(gzip(UTF-8 JSON)), no padding; the JSON is
-`{"devices":[{"id","key","ver","name","cat","pid","dps":[[dp_id,code,type,scale,unit,writable], …]}]}`. `ver` may be
-missing for an offline device; discovery fills the IP and version by matching the device id. Keys are stored only in
+`{"devices":[{"id","key","ver","name","cat","pid","ip","dps":[[dp_id,code,type,scale,unit,writable], …]}]}`. `ver` may be
+missing for an offline device; discovery fills the IP and version by matching the device id. `ip` is optional: when
+present (dotted IPv4) the app connects to it straight away, which is what makes a device usable on networks where its
+UDP broadcast never reaches the phone (a router or phone that filters broadcast). A wrong `ip` is ignored. Keys are stored only in
 the app's encrypted storage and never logged (the log says only "imported N devices").
 
 ## How the connector behaves

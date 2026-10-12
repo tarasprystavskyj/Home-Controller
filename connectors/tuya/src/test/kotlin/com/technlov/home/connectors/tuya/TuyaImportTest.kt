@@ -43,6 +43,21 @@ class TuyaImportTest {
     }
 
     @Test
+    fun anOptionalIpIsKeptAndABadOneIsIgnored() {
+        fun code(ip: String) = TuyaImport.PREFIX + Base64.getUrlEncoder().withoutPadding().encodeToString(
+            java.io.ByteArrayOutputStream().also { bos ->
+                java.util.zip.GZIPOutputStream(bos).use {
+                    it.write("""{"devices":[{"id":"bfakeid0000000000000009","key":"0123456789abcdef","ver":"3.5","cat":"cz","ip":"$ip"}]}""".toByteArray())
+                }
+            }.toByteArray(),
+        )
+        assertEquals("10.114.1.117", TuyaImport.parse(code("10.114.1.117"))[0].address)
+        assertEquals("", TuyaImport.parse(code("10.114.1.300"))[0].address)
+        assertEquals("", TuyaImport.parse(code("plug.local"))[0].address)
+        assertEquals("", TuyaImport.parse(code(""))[0].address)
+    }
+
+    @Test
     fun arabicNamesSurvive() {
         assertEquals("مكيف الصالة", TuyaImport.parse(payload)[0].name)
     }
